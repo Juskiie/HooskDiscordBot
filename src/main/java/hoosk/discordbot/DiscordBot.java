@@ -1,21 +1,31 @@
-import Hoosk.api.commands.TicketCommand;
+package hoosk.discordbot;
+
+import hoosk.api.commands.TicketCommand;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+import org.json.JSONObject;
+
 import java.util.Collections;
+import java.util.Map;
 
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
+import software.amazon.awssdk.services.secretsmanager.model.InvalidParameterException;
 
 public class DiscordBot extends ListenerAdapter {
 
     public static void main(String[] args) throws InterruptedException{
-        final String TOKEN = System.getenv("DISCORD_BOT");
+
+        // GET KEY
+        // final String TOKEN = System.getenv("DISCORD_BOT");
+        String TOKEN = (System.getenv("DISCORD_BOT") != null) ? System.getenv("DISCORD_BOT") : getSecret();
+
         JDA builder = JDABuilder.createLight(TOKEN, Collections.emptyList())
                 .addEventListeners(new DiscordBot())
                 .setActivity(Activity.playing("Type /ticket"))
@@ -30,7 +40,6 @@ public class DiscordBot extends ListenerAdapter {
         builder.addEventListener(new TicketCommand());
     }
 
-    @SuppressWarnings("unused")
     public static String getSecret() {
         String secretName = "hooskbot/api/key";
         Region region = Region.of("eu-west-2");
@@ -48,12 +57,15 @@ public class DiscordBot extends ListenerAdapter {
         try {
             getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
         } catch (Exception e) {
-            // For a list of exceptions thrown, see
-            // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
             e.printStackTrace();
             throw e;
         }
 
-        return getSecretValueResponse.secretString();
+        String secretString = getSecretValueResponse.secretString();
+
+        // Convert the JSON string into a JSONObject
+        JSONObject jsonObject = new JSONObject(secretString);
+
+        return jsonObject.getString("DiscordBotToken");
     }
 }
