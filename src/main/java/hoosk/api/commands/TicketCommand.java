@@ -96,7 +96,6 @@ public class TicketCommand extends ListenerAdapter {
             }
         }
     }
-
     public Category CreateCategoryIfNotPresent(Guild guild, String categoryName) {
         Category category;
 
@@ -108,7 +107,6 @@ public class TicketCommand extends ListenerAdapter {
 
         return category;
     }
-
     public boolean categoryExists(@NotNull Guild guild, String category){
         for (Category cat : guild.getCategories()) {
             if(cat.getName().equalsIgnoreCase(category)) {
@@ -117,7 +115,6 @@ public class TicketCommand extends ListenerAdapter {
         }
         return false;
     }
-
     public Category getCategory(@NotNull Guild guild, String category) {
         for (Category cat : guild.getCategories()) {
             if(cat.getName().equalsIgnoreCase(category)) {
@@ -136,9 +133,5 @@ public class TicketCommand extends ListenerAdapter {
         SupportRole.createSupportRole(guild, callback);
     }
 
-    @SuppressWarnings("unused")
-    private Guild getGuild(SlashCommandInteractionEvent evt){
-        return evt.getGuild();
-    }
 }
 
