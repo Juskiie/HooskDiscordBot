@@ -1,5 +1,6 @@
 package hoosk.discordbot;
 
+import hoosk.api.commands.DiceRollCommand;
 import hoosk.api.commands.PingCommand;
 import hoosk.api.commands.RandomNumberCommand;
 import hoosk.api.commands.TicketCommand;
@@ -7,6 +8,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 import org.json.JSONObject;
@@ -30,8 +32,13 @@ public class DiscordBot extends ListenerAdapter {
         String TOKEN = (System.getenv("DISCORD_BOT") != null) ? System.getenv("DISCORD_BOT") : getSecret();
 
         JDA builder = JDABuilder.createLight(TOKEN, Collections.emptyList())
-                .addEventListeners(new DiscordBot())
-                .setActivity(Activity.playing("Type /ticket"))
+                .addEventListeners(
+                        new TicketCommand(),
+                        new PingCommand(),
+                        new RandomNumberCommand(),
+                        new DiceRollCommand()
+                )
+                .setActivity(Activity.playing("Woof!"))
                 .build()
                 .awaitReady();
 
@@ -39,13 +46,24 @@ public class DiscordBot extends ListenerAdapter {
                 Commands.slash("ping", "Calculate ping of the bot"),
                 Commands.slash("ticket", "Send a support ticket!"),
                 Commands.slash("rng", "Generate a random number!")
+                        .addOption(OptionType.INTEGER, "min", "The starting value to generate from", false)
+                        .addOption(OptionType.INTEGER, "max", "The maximum value to generate to", false),
+                Commands.slash("roll", "Roll dice!")
+                        .addOption(OptionType.INTEGER, "sides", "What type of dice? How many sides?", true)
+                        .addOption(OptionType.INTEGER, "times", "How many times to roll the dice", false)
         ).queue();
-
-        builder.addEventListener(new TicketCommand());
-        builder.addEventListener(new PingCommand());
-        builder.addEventListener(new RandomNumberCommand());
-
     }
+
+   /**
+    public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        switch (event.getName()) {
+            case "ping":
+                new PingCommand().pingResponse(event);
+                break;
+            case "ticket":
+                new TicketCommand()
+        }
+    }**/
 
     public static String getSecret() {
         String secretName = "hooskbot/api/key";

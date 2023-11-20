@@ -25,6 +25,7 @@ public class TicketCommand extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         if (event.getName().equals("ticket")) {
+            event.deferReply(true).queue();
             createTicketChannel(event);
         }
     }
@@ -37,10 +38,10 @@ public class TicketCommand extends ListenerAdapter {
      * @param event The SlashCommandInteractionEvent
      */
     private void createTicketChannel(@NotNull SlashCommandInteractionEvent event) {
-        String categoryName = "Tickets";
+        final String categoryName = "Tickets";
 
         if(!event.isFromGuild()) {
-            event.reply("Sorry, this command can only be used in a server!").setEphemeral(true).queue();
+            event.getHook().sendMessage("Sorry, this command can only be used in a server!").setEphemeral(true).queue();
             return;
         }
 
@@ -75,7 +76,7 @@ public class TicketCommand extends ListenerAdapter {
                     getSupportRole(server, supportRole -> textChannel.sendMessage(supportRole.getAsMention() + ", will be here to assist you shortly.")
                             .queue());
 
-                    event.reply("Created a ticket channel: " + textChannel.getAsMention()).setEphemeral(true).queue();
+                    event.getHook().sendMessage("Created a ticket channel: " + textChannel.getAsMention()).setEphemeral(true).queue();
                 });
             }
         }

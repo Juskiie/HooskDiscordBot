@@ -9,15 +9,20 @@ public class PingCommand extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event){
         if(event.getName().equals("ping")) {
+            // event.deferReply(true).queue();
             pingResponse(event);
         }
     }
 
     public void pingResponse(SlashCommandInteractionEvent event) {
         if(!event.isFromGuild()) {
-            event.reply("Sorry, this command can only be used in a server!").setEphemeral(true).queue();
+            event.getHook().sendMessage("Sorry, this command can only be used in a server!").setEphemeral(true).queue();
         } else {
-            event.reply("PONG!").setEphemeral(true).queue();
+            long time = System.currentTimeMillis();
+            event.reply("Pong!").setEphemeral(true) // reply or acknowledge
+                    .flatMap(v ->
+                            event.getHook().editOriginalFormat("Pong: %d ms", System.currentTimeMillis() - time) // then edit original
+                    ).queue(); // Queue both reply and edit
         }
     }
 
