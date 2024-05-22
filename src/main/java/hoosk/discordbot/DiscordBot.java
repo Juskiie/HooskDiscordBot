@@ -1,9 +1,6 @@
 package hoosk.discordbot;
 
-import hoosk.api.commands.DiceRollCommand;
-import hoosk.api.commands.PingCommand;
-import hoosk.api.commands.RandomNumberCommand;
-import hoosk.api.commands.TicketCommand;
+import hoosk.api.commands.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -11,6 +8,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.json.JSONObject;
 
 import java.util.Collections;
@@ -25,20 +23,27 @@ import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRespon
  */
 public class DiscordBot extends ListenerAdapter {
 
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException {
 
         // GET KEY
         // If running local should get from environment variable, otherwise use secure secrets manager
         String TOKEN = (System.getenv("DISCORD_BOT") != null) ? System.getenv("DISCORD_BOT") : getSecret();
 
-        JDA builder = JDABuilder.createLight(TOKEN, Collections.emptyList())
+        JDA builder = JDABuilder.create(TOKEN, GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_PRESENCES,
+                        GatewayIntent.GUILD_VOICE_STATES,
+                        GatewayIntent.DIRECT_MESSAGES,
+                        GatewayIntent.MESSAGE_CONTENT,
+                        GatewayIntent.SCHEDULED_EVENTS)
                 .addEventListeners(
                         new TicketCommand(),
                         new PingCommand(),
                         new RandomNumberCommand(),
-                        new DiceRollCommand()
+                        new DiceRollCommand(),
+                        new ApexRandomLegendPickerCommand()
                 )
-                .setActivity(Activity.playing("Woof!"))
+                .setActivity(Activity.customStatus("Woof!"))
                 .build()
                 .awaitReady();
 
@@ -50,7 +55,8 @@ public class DiscordBot extends ListenerAdapter {
                         .addOption(OptionType.INTEGER, "max", "The maximum value to generate to", false),
                 Commands.slash("roll", "Roll dice!")
                         .addOption(OptionType.INTEGER, "sides", "What type of dice? How many sides?", true)
-                        .addOption(OptionType.INTEGER, "times", "How many times to roll the dice", false)
+                        .addOption(OptionType.INTEGER, "times", "How many times to roll the dice", false),
+                Commands.slash("apexlegend", "Pick a random legend from Apex Legends!")
         ).queue();
     }
 
