@@ -33,7 +33,7 @@ public class TicketCommand extends ListenerAdapter {
     /**
      * When called, the following vars are used:
      * Guild server - The server where the command was issued.
-     * Member member - The issuer of the command.
+     * Member user - The issuer of the command.
      *
      * @param event The SlashCommandInteractionEvent
      */

@@ -11,8 +11,6 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.json.JSONObject;
 
-import java.util.Collections;
-
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
@@ -56,7 +54,7 @@ public class DiscordBot extends ListenerAdapter {
                 Commands.slash("roll", "Roll dice!")
                         .addOption(OptionType.INTEGER, "sides", "What type of dice? How many sides?", true)
                         .addOption(OptionType.INTEGER, "times", "How many times to roll the dice", false),
-                Commands.slash("apexlegend", "Pick a random legend from Apex Legends!")
+                Commands.slash("apexlegend", "Pick a random legend from Apex Legends, for all members in the 'apex' voice channel.")
         ).queue();
     }
 

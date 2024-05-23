@@ -34,7 +34,7 @@ public class DiceRollCommand extends ListenerAdapter {
         else {
             if (diceSidesOption.getAsInt() < 4) {
                 diceSides = 4;
-                event.getHook().sendMessage("Smallest rollable dice is a d4, setting to 4.").setEphemeral(true).queue();
+                event.getHook().sendMessage("Smallest roll-able dice is a d4, setting to 4.").setEphemeral(true).queue();
             } else {
                 diceSides = diceSidesOption.getAsInt();
             }
