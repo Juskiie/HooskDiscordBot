@@ -9,7 +9,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-
+/**
+ * Probably going to remove this soon.
+ */
 public class ApexRandomLegendPickerCommand extends ListenerAdapter {
 
     @Override
@@ -78,7 +80,7 @@ public class ApexRandomLegendPickerCommand extends ListenerAdapter {
     @NotNull
     private static ArrayList<String> getLegendsList() {
         String[] Legends = {
-                "Alter", "Ashe", "Ballistic",
+                "Alter", "Ash", "Ballistic",
                 "Bangalore", "Bloodhound", "Catalyst",
                 "Caustic", "Conduit", "Crypto",
                 "Fuse", "Gibraltar", "Horizon",
