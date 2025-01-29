@@ -69,6 +69,7 @@ public class DiscordBot extends ListenerAdapter {
         }
     }**/
 
+    // This needs to be refactored soon.
     public static String getSecret() {
         String secretName = "hooskbot/api/key";
         Region region = Region.of("eu-west-2");
