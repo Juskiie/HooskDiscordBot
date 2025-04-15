@@ -22,6 +22,7 @@ public class ApexRandomLegendPickerCommand extends ListenerAdapter {
         }
     }
 
+
     /**
      * Main command handler.
      * @param event SlashCommandInteractionEvent
